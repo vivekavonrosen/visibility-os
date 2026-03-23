@@ -99,7 +99,7 @@ function FieldInput({ field, value, onChange }) {
 }
 
 export default function ModuleShell({ moduleIndex, onNavigate }) {
-  const { state, setView, setBusinessContext, saveModuleOutput, saveModuleInputs, saveEditedOutput, setCurrentModule } = useApp();
+  const { state, setBusinessContext, saveModuleOutput, saveModuleInputs, saveEditedOutput, setCurrentModule } = useApp();
   const module = MODULES[moduleIndex];
   const moduleData = getModuleData(state, module.id);
   const existingOutput = getEffectiveOutput(state, module.id);
@@ -466,7 +466,7 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
         ) : (
           <button
             className="btn-nav btn-nav-next"
-            onClick={() => setView('complete')}
+            onClick={() => setCurrentModule(10)}
             style={{
               background: 'linear-gradient(135deg, var(--gold), var(--gold-muted))',
               borderColor: 'var(--gold)',

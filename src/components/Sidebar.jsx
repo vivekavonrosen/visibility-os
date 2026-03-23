@@ -4,7 +4,7 @@ import { MODULES } from '../data/modules.js';
 import { getEffectiveOutput } from '../utils/storage.js';
 
 export default function Sidebar() {
-  const { state, setCurrentModule, setView } = useApp();
+  const { state, setCurrentModule } = useApp();
   const { user, signOut } = useAuth();
 
   const completed = MODULES.filter(m => getEffectiveOutput(state, m.id)).length;
@@ -61,14 +61,14 @@ export default function Sidebar() {
 
       {/* Completion page link */}
       <div
-        className={`nav-item ${state.view === 'complete' ? 'active' : ''}`}
-        onClick={() => setView('complete')}
+        className={`nav-item ${(state.currentModule || 0) >= 10 ? 'active' : ''}`}
+        onClick={() => setCurrentModule(10)}
         role="button"
         tabIndex={0}
         style={{
           borderTop: '1px solid rgba(255,255,255,0.08)',
-          background: state.view === 'complete' ? 'rgba(223,178,74,0.15)' : 'transparent',
-          borderLeft: state.view === 'complete' ? '3px solid var(--gold)' : '3px solid transparent',
+          background: (state.currentModule || 0) >= 10 ? 'rgba(223,178,74,0.15)' : 'transparent',
+          borderLeft: (state.currentModule || 0) >= 10 ? '3px solid var(--gold)' : '3px solid transparent',
         }}
       >
         <span className="nav-num" style={{ color: 'var(--gold)' }}>🎉</span>

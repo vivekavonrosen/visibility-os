@@ -1,7 +1,7 @@
 import { useApp } from '../context/AppContext.jsx';
 import { MODULES } from '../data/modules.js';
 import { getEffectiveOutput } from '../utils/storage.js';
-import { downloadMarkdown, generateExecutiveSummary, getCompletionStats } from '../utils/export.js';
+import { generateExecutiveSummary, getCompletionStats } from '../utils/export.js';
 import { useState, useCallback } from 'react';
 
 export default function CompletionPage() {
@@ -20,9 +20,10 @@ export default function CompletionPage() {
     }
     setDownloadStep('downloading');
     try {
-      downloadMarkdown(state, summary);
+      const { downloadPlaybookPDF } = await import('../utils/pdf.js');
+      downloadPlaybookPDF(state, summary);
     } catch (e) {
-      console.error(e);
+      console.error('PDF error:', e);
     }
     setDownloadStep('done');
     setTimeout(() => setDownloadStep('idle'), 3000);
@@ -134,7 +135,7 @@ export default function CompletionPage() {
               {downloadStep === 'idle' && '⬇ Download Your Playbook'}
             </button>
             <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-              Includes an AI-generated executive summary at the top —<br />ICP, point of pain, solution, USP, and positioning statement.
+              Downloads as a branded PDF — executive summary, all 10 modules,<br />and your next steps with Viveka's links.
             </div>
           </div>
         </div>

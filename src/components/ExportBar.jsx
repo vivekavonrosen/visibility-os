@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
-import { downloadMarkdown, generateExecutiveSummary, getCompletionStats } from '../utils/export.js';
+import { generateExecutiveSummary, getCompletionStats } from '../utils/export.js';
 
 export default function ExportBar() {
   const { state, setView } = useApp();
@@ -17,7 +17,8 @@ export default function ExportBar() {
     }
     setExportStep('downloading');
     try {
-      downloadMarkdown(state, summary);
+      const { downloadPlaybookPDF } = await import('../utils/pdf.js');
+      downloadPlaybookPDF(state, summary);
     } catch (e) {
       console.error('Export failed:', e);
     }
