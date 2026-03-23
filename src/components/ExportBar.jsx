@@ -1,20 +1,28 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
-import { downloadMarkdown, getCompletionStats } from '../utils/export.js';
+import { downloadMarkdown, generateExecutiveSummary, getCompletionStats } from '../utils/export.js';
 
 export default function ExportBar() {
   const { state, setView } = useApp();
   const stats = getCompletionStats(state);
-  const [exporting, setExporting] = useState(false);
+  const [exportStep, setExportStep] = useState('idle');
 
   async function handleExport() {
-    setExporting(true);
+    setExportStep('summarising');
+    let summary = '';
     try {
-      downloadMarkdown(state);
+      summary = await generateExecutiveSummary(state);
+    } catch (e) {
+      console.error('Summary failed:', e);
+    }
+    setExportStep('downloading');
+    try {
+      downloadMarkdown(state, summary);
     } catch (e) {
       console.error('Export failed:', e);
     }
-    setTimeout(() => setExporting(false), 1500);
+    setExportStep('done');
+    setTimeout(() => setExportStep('idle'), 2500);
   }
 
   return (
@@ -29,8 +37,11 @@ export default function ExportBar() {
       </div>
 
       <div className="export-bar-right">
-        <button className="btn-export" onClick={handleExport} disabled={stats.completed === 0}>
-          {exporting ? '⏳ Exporting...' : '⬇ Export Strategy Doc'}
+        <button className="btn-export" onClick={handleExport} disabled={stats.completed === 0 || exportStep !== 'idle'}>
+          {exportStep === 'summarising' && '✍️ Writing Summary...'}
+          {exportStep === 'downloading' && '⏳ Building...'}
+          {exportStep === 'done'        && '✅ Downloaded!'}
+          {exportStep === 'idle'        && '⬇ Export Playbook'}
         </button>
 
         <button

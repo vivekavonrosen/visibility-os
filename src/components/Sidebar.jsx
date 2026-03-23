@@ -1,9 +1,11 @@
 import { useApp } from '../context/AppContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import { MODULES } from '../data/modules.js';
 import { getEffectiveOutput } from '../utils/storage.js';
 
 export default function Sidebar() {
-  const { state, setCurrentModule } = useApp();
+  const { state, setCurrentModule, setView } = useApp();
+  const { user, signOut } = useAuth();
 
   const completed = MODULES.filter(m => getEffectiveOutput(state, m.id)).length;
   const percent = Math.round((completed / MODULES.length) * 100);
@@ -56,6 +58,72 @@ export default function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Completion page link */}
+      <div
+        className={`nav-item ${state.view === 'complete' ? 'active' : ''}`}
+        onClick={() => setView('complete')}
+        role="button"
+        tabIndex={0}
+        style={{
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          background: state.view === 'complete' ? 'rgba(223,178,74,0.15)' : 'transparent',
+          borderLeft: state.view === 'complete' ? '3px solid var(--gold)' : '3px solid transparent',
+        }}
+      >
+        <span className="nav-num" style={{ color: 'var(--gold)' }}>🎉</span>
+        <div className="nav-icon" style={{ background: 'rgba(223,178,74,0.1)' }}>📋</div>
+        <div className="nav-text">
+          <div className="nav-title" style={{ color: state.view === 'complete' ? 'var(--gold)' : 'rgba(255,255,255,0.5)' }}>
+            Your Playbook
+          </div>
+          <div className="nav-subtitle">Download & next steps</div>
+        </div>
+      </div>
+      {/* User + Sign out */}
+      <div className="sidebar-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '14px 20px' }}>
+        {user && (
+          <div style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
+              Signed in as
+            </div>
+            <div style={{
+              fontSize: '0.75rem',
+              color: 'rgba(255,255,255,0.6)',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+              {user.email}
+            </div>
+          </div>
+        )}
+        <button
+          onClick={signOut}
+          style={{
+            width: '100%',
+            padding: '7px 12px',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 'var(--radius-md)',
+            color: 'rgba(255,255,255,0.35)',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'all 0.18s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
+        >
+          ← Sign Out
+        </button>
+      </div>
     </aside>
   );
 }

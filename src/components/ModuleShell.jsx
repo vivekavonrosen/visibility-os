@@ -99,7 +99,7 @@ function FieldInput({ field, value, onChange }) {
 }
 
 export default function ModuleShell({ moduleIndex, onNavigate }) {
-  const { state, setBusinessContext, saveModuleOutput, saveModuleInputs, saveEditedOutput, setCurrentModule } = useApp();
+  const { state, setView, setBusinessContext, saveModuleOutput, saveModuleInputs, saveEditedOutput, setCurrentModule } = useApp();
   const module = MODULES[moduleIndex];
   const moduleData = getModuleData(state, module.id);
   const existingOutput = getEffectiveOutput(state, module.id);
@@ -435,6 +435,10 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
         isStreaming={isGenerating}
         streamingText={streamingText}
         onEditSave={(val) => saveEditedOutput(module.id, val)}
+        moduleTitle={module.title}
+        moduleSubtitle={module.subtitle}
+        moduleNum={module.number}
+        brandName={state.businessContext?.brandName || ''}
       />
 
       {/* Bottom Navigation */}
@@ -452,18 +456,27 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
           {moduleIndex + 1} of {MODULES.length}
         </span>
 
-        <button
-          className={`btn-nav ${moduleIndex < MODULES.length - 1 ? 'btn-nav-next' : ''}`}
-          onClick={() => {
-            if (moduleIndex < MODULES.length - 1) {
-              setCurrentModule(moduleIndex + 1);
-            }
-          }}
-          disabled={moduleIndex === MODULES.length - 1}
-          style={{ opacity: moduleIndex === MODULES.length - 1 ? 0 : 1 }}
-        >
-          Next Module →
-        </button>
+        {moduleIndex < MODULES.length - 1 ? (
+          <button
+            className="btn-nav btn-nav-next"
+            onClick={() => setCurrentModule(moduleIndex + 1)}
+          >
+            Next Module →
+          </button>
+        ) : (
+          <button
+            className="btn-nav btn-nav-next"
+            onClick={() => setView('complete')}
+            style={{
+              background: 'linear-gradient(135deg, var(--gold), var(--gold-muted))',
+              borderColor: 'var(--gold)',
+              color: 'var(--sidebar-bg)',
+              boxShadow: '0 4px 16px rgba(223,178,74,0.35)',
+            }}
+          >
+            🎉 View Your Playbook →
+          </button>
+        )}
       </div>
     </div>
   );
