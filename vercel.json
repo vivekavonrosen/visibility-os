@@ -3,12 +3,11 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "api/generate.js": {
-      "maxDuration": 60
-    }
+    "api/generate.js": { "maxDuration": 60 },
+    "api/scrape.js":   { "maxDuration": 30 }
   },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/(.*)",     "destination": "/index.html" }
   ]
 }
