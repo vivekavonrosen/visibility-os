@@ -51,16 +51,9 @@ export default function Landing() {
         <div className="landing-nav-logo">
           VISIBILITY <span>INFRASTRUCTURE</span> OS
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <img
-            src="/logo.png"
-            alt="Beyond the Dream Board"
-            style={{ height: 44, width: 'auto', opacity: 0.92 }}
-          />
-          <button className="btn-nav-cta" onClick={handleStart}>
-            Start Building →
-          </button>
-        </div>
+        <button className="btn-nav-cta" onClick={handleStart}>
+          Start Building →
+        </button>
       </nav>
 
       {/* Hero */}
@@ -68,7 +61,8 @@ export default function Landing() {
         <div className="hero-bg-gradient" />
         <div className="hero-bg-lines" />
 
-        <div className="hero-content">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 60, position: 'relative', zIndex: 1 }}>
+        <div className="hero-content" style={{ flex: '0 0 auto', maxWidth: 620 }}>
           <div className="hero-eyebrow">
             ✦ For Accomplished Women 50+ Building Next-Chapter Businesses
           </div>
@@ -132,6 +126,28 @@ export default function Landing() {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+
+          {/* Logo — right side of hero */}
+          <div style={{
+            flex: '0 0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingRight: 20,
+          }}>
+            <img
+              src="/logo.png"
+              alt="Beyond the Dream Board"
+              style={{
+                width: 260,
+                height: 260,
+                objectFit: 'contain',
+                opacity: 0.88,
+                filter: 'drop-shadow(0 8px 40px rgba(223,178,74,0.2))',
+              }}
+            />
           </div>
         </div>
       </section>
