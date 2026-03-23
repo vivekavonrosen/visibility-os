@@ -51,9 +51,16 @@ export default function Landing() {
         <div className="landing-nav-logo">
           VISIBILITY <span>INFRASTRUCTURE</span> OS
         </div>
-        <button className="btn-nav-cta" onClick={handleStart}>
-          Start Building →
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          <img
+            src="/logo.png"
+            alt="Beyond the Dream Board"
+            style={{ height: 44, width: 'auto', opacity: 0.92 }}
+          />
+          <button className="btn-nav-cta" onClick={handleStart}>
+            Start Building →
+          </button>
+        </div>
       </nav>
 
       {/* Hero */}
