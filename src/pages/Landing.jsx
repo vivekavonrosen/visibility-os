@@ -89,20 +89,42 @@ export default function Landing() {
               See all 10 modules ↓
             </button>
           </div>
-        </div>
 
-        <div className="hero-stats">
-          <div className="hero-stat-card">
-            <div className="hero-stat-num">10</div>
-            <div className="hero-stat-label">Strategy<br />Modules</div>
-          </div>
-          <div className="hero-stat-card">
-            <div className="hero-stat-num">1</div>
-            <div className="hero-stat-label">Complete<br />System</div>
-          </div>
-          <div className="hero-stat-card">
-            <div className="hero-stat-num">∞</div>
-            <div className="hero-stat-label">Reusable<br />Outputs</div>
+          {/* Inline stats — no floating cards */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 40,
+            marginTop: 48,
+            paddingTop: 28,
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+          }}>
+            {[
+              { num: '10', label: 'Strategy modules' },
+              { num: '1', label: 'Complete system' },
+              { num: '60–90 min', label: 'To complete' },
+            ].map((stat, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                <span style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '2.2rem',
+                  letterSpacing: '0.04em',
+                  color: 'var(--gold)',
+                  lineHeight: 1,
+                }}>
+                  {stat.num}
+                </span>
+                <span style={{
+                  fontSize: '0.72rem',
+                  color: 'rgba(255,255,255,0.4)',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                }}>
+                  {stat.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
