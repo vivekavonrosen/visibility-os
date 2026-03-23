@@ -1556,7 +1556,6 @@ p { margin-bottom: 0; }
 /* --- Responsive (basic) --- */
 @media (max-width: 1024px) {
   .hero-stats { display: none; }
-  .modules-grid { grid-template-columns: repeat(3, 1fr); }
   .hero-title { font-size: 3.5rem; }
 }
 

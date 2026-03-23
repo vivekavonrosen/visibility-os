@@ -84,9 +84,9 @@ export default function Landing() {
             </button>
             <button
               className="btn-hero-secondary"
-              onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('modules')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              See how it works ↓
+              See all 10 modules ↓
             </button>
           </div>
         </div>
@@ -127,11 +127,81 @@ export default function Landing() {
         ))}
       </div>
 
+      {/* ── 10 MODULES — prominent, right after hero ── */}
+      <section className="landing-section light" id="modules">
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 20 }}>
+            <div>
+              <span className="section-eyebrow">The System</span>
+              <h2 className="section-title" style={{ marginBottom: 10 }}>
+                10 modules.<br /><span>One clear path.</span>
+              </h2>
+              <p className="section-desc">
+                From strategic foundation to revenue roadmap — each module builds on the last.
+                Run them in sequence in a single session.
+              </p>
+            </div>
+            <button className="btn-hero-primary" onClick={handleStart} style={{ flexShrink: 0 }}>
+              <span>⚡</span> Start Now
+            </button>
+          </div>
+
+          {/* 2-row × 5-col grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: 16,
+          }}>
+            {MODULES_PREVIEW.map((m, i) => (
+              <div key={m.num} style={{
+                background: 'white',
+                border: '1px solid var(--border)',
+                borderTop: `3px solid ${i < 5 ? 'var(--purple)' : 'var(--teal)'}`,
+                borderRadius: 'var(--radius-lg)',
+                padding: '20px 16px',
+                transition: 'box-shadow 0.18s ease, transform 0.18s ease',
+                cursor: 'pointer',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.transform = ''; }}
+                onClick={handleStart}
+              >
+                <div style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
+                  Module {m.num}
+                </div>
+                <div style={{ fontSize: '1.4rem', marginBottom: 10 }}>{m.icon}</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9rem', letterSpacing: '0.04em', color: 'var(--text-primary)', marginBottom: 6, lineHeight: 1.2 }}>
+                  {m.title}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                  {m.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Row labels */}
+          <div style={{ display: 'flex', marginTop: 12, gap: 16 }}>
+            <div style={{ flex: '0 0 calc(50% - 8px)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 12, height: 12, borderRadius: 2, background: 'var(--purple)', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Modules 01–05: Strategy foundation — clarity, positioning, and content</span>
+            </div>
+            <div style={{ flex: '0 0 calc(50% - 8px)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 12, height: 12, borderRadius: 2, background: 'var(--teal)', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Modules 06–10: Execution — platform, content creation, and revenue</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div style={{ height: 2, background: 'linear-gradient(90deg, var(--purple), var(--teal))' }} />
+
       {/* Problem / positioning */}
-      <section className="landing-section light" style={{ textAlign: 'center', padding: '80px 60px' }}>
+      <section className="landing-section muted" style={{ textAlign: 'center' }}>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
           <span className="section-eyebrow">Why This Exists</span>
-          <h2 className="section-title" style={{ fontSize: '2.4rem' }}>
+          <h2 className="section-title" style={{ fontSize: '2.2rem' }}>
             You have decades of expertise.<br />
             <span>What you need is a system to make it visible.</span>
           </h2>
@@ -144,33 +214,6 @@ export default function Landing() {
           <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginTop: 14 }}>
             Visibility Infrastructure OS solves that — module by module, in one session.
           </p>
-        </div>
-      </section>
-
-      {/* Divider line */}
-      <div style={{ height: 2, background: 'linear-gradient(90deg, var(--purple), var(--teal))', maxWidth: '100%' }} />
-
-      {/* What It Is */}
-      <section className="landing-section muted" id="what-it-is">
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <span className="section-eyebrow">What Is This?</span>
-          <h2 className="section-title">Not a prompt library.<br /><span>A strategic operating system.</span></h2>
-          <p className="section-desc" style={{ marginBottom: 40 }}>
-            Generic AI tools give you generic outputs. This system builds every prompt
-            around your specific expertise, audience, and business — so each output moves
-            your strategy forward in a specific, actionable direction.
-          </p>
-
-          <div className="modules-grid">
-            {MODULES_PREVIEW.map(m => (
-              <div key={m.num} className="module-card">
-                <div className="module-card-num">Module {m.num}</div>
-                <div className="module-card-icon">{m.icon}</div>
-                <div className="module-card-title">{m.title}</div>
-                <div className="module-card-desc">{m.desc}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -271,13 +314,11 @@ export default function Landing() {
               Two things.<br /><span>That's it.</span>
             </h2>
             <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginTop: 16 }}>
-              You need an Anthropic API key — available at console.anthropic.com — and
-              about 60–90 minutes to run through all ten modules.
+              You need access to this tool and about 60–90 minutes to run through all ten modules.
+              No tech background required. No existing audience needed. No finished offer necessary.
             </p>
             <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginTop: 12 }}>
-              Each module typically costs $0.01–$0.05 in API usage. Your API key is
-              stored only in your browser and goes directly to Anthropic — never through
-              any third party.
+              Clarity comes through the process — that's exactly what this system is designed to do.
             </p>
           </div>
           <div style={{
@@ -287,9 +328,9 @@ export default function Landing() {
             padding: 32,
           }}>
             {[
-              ['✅', 'Your Anthropic API key (free to get, ~$0.50 total to run all modules)'],
               ['✅', '60–90 minutes of focused time'],
-              ['✅', 'Honest answers about your business, audience, and goals'],
+              ['✅', 'Honest answers about your business and goals'],
+              ['✅', 'A willingness to think strategically about your expertise'],
               ['❌', 'A tech background — none required'],
               ['❌', 'An existing audience — start from zero'],
               ['❌', 'A finished offer — clarity comes through the process'],
