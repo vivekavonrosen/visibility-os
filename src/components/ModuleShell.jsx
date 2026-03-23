@@ -5,6 +5,7 @@ import { getModuleData, getEffectiveOutput } from '../utils/storage.js';
 import { streamCompletion } from '../utils/api.js';
 import OutputBlock from './OutputBlock.jsx';
 
+
 // Business Context gets special treatment — it's the intake form
 function BusinessContextInputs({ data, onChange }) {
   const sections = [
@@ -108,9 +109,47 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
   const [error, setError] = useState('');
   const abortRef = useRef(null);
 
+  // Website scraper state (Module 1 only)
+  const [scrapeUrl, setScrapeUrl] = useState('');
+  const [scrapeStatus, setScrapeStatus] = useState('idle');
+  const [scrapeMsg, setScrapeMsg] = useState('');
+
   // Local state for additional module inputs
   const [localInputs, setLocalInputs] = useState(moduleData.inputs || {});
   const [localCtx, setLocalCtx] = useState(state.businessContext || {});
+
+  // Website scraper handler
+  async function handleScrape() {
+    const trimmed = scrapeUrl.trim();
+    if (!trimmed) return;
+    const fullUrl = trimmed.startsWith('http') ? trimmed : 'https://' + trimmed;
+    setScrapeStatus('loading');
+    setScrapeMsg('');
+    try {
+      const res = await fetch('/api/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: fullUrl }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setScrapeStatus('error');
+        setScrapeMsg(json.error || 'Something went wrong. Try again.');
+        return;
+      }
+      const filled = Object.fromEntries(
+        Object.entries(json.data).filter(([, v]) => v && v.trim())
+      );
+      const updated = { ...localCtx, ...filled };
+      setLocalCtx(updated);
+      setBusinessContext(updated);
+      setScrapeStatus('success');
+      setScrapeMsg(`${Object.keys(filled).length} fields pre-filled from your site. Review and edit below, then generate.`);
+    } catch {
+      setScrapeStatus('error');
+      setScrapeMsg('Could not reach the server. Try again.');
+    }
+  }
 
   // Get prior module's output for context
   function getPriorOutput() {
@@ -216,8 +255,113 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
       )}
 
       {/* Inputs */}
+      {isFirstModule && (
+        <div style={{
+          background: 'linear-gradient(135deg, var(--purple) 0%, #3d1660 100%)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '24px 28px',
+          marginBottom: 28,
+          boxShadow: '0 4px 20px rgba(87,31,129,0.25)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16 }}>
+            <div style={{ fontSize: '1.6rem', lineHeight: 1, flexShrink: 0 }}>🌐</div>
+            <div>
+              <div style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.2rem',
+                letterSpacing: '0.08em',
+                color: 'white',
+                marginBottom: 5,
+              }}>
+                START WITH YOUR WEBSITE
+              </div>
+              <div style={{ fontSize: '0.83rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.6 }}>
+                Enter your URL and we'll read your site and pre-fill as many fields as possible.
+                You review and edit everything before generating.
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 10 }}>
+            <input
+              type="url"
+              value={scrapeUrl}
+              onChange={e => { setScrapeUrl(e.target.value); setScrapeStatus('idle'); setScrapeMsg(''); }}
+              placeholder="https://yourdomain.com"
+              onKeyDown={e => e.key === 'Enter' && handleScrape()}
+              disabled={scrapeStatus === 'loading'}
+              style={{
+                flex: 1,
+                padding: '10px 14px',
+                background: 'rgba(255,255,255,0.12)',
+                border: '1.5px solid rgba(255,255,255,0.25)',
+                borderRadius: 'var(--radius-md)',
+                color: 'white',
+                fontSize: '0.9rem',
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={handleScrape}
+              disabled={!scrapeUrl.trim() || scrapeStatus === 'loading'}
+              style={{
+                padding: '10px 22px',
+                background: scrapeStatus === 'loading' ? 'rgba(223,178,74,0.5)' : 'var(--gold)',
+                border: 'none',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--sidebar-bg)',
+                fontSize: '0.82rem',
+                fontWeight: 900,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                cursor: scrapeStatus === 'loading' ? 'not-allowed' : 'pointer',
+                whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                transition: 'all 0.18s ease',
+              }}
+            >
+              {scrapeStatus === 'loading' ? (
+                <><div style={{
+                  width: 14, height: 14,
+                  border: '2px solid rgba(26,10,46,0.3)',
+                  borderTopColor: 'var(--sidebar-bg)',
+                  borderRadius: '50%',
+                  animation: 'spin 0.7s linear infinite',
+                }} /> Reading...</>
+              ) : <>⚡ Read My Site</>}
+            </button>
+          </div>
+
+          {scrapeMsg && (
+            <div style={{
+              marginTop: 12,
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '0.82rem',
+              lineHeight: 1.5,
+              background: scrapeStatus === 'success'
+                ? 'rgba(44,151,175,0.2)'
+                : 'rgba(192,57,43,0.2)',
+              border: `1px solid ${scrapeStatus === 'success' ? 'rgba(44,151,175,0.5)' : 'rgba(255,100,80,0.4)'}`,
+              color: scrapeStatus === 'success' ? '#a8e6d8' : '#ffb3a7',
+            }}>
+              {scrapeStatus === 'success' ? '✅ ' : '⚠️ '}{scrapeMsg}
+            </div>
+          )}
+
+          <div style={{ marginTop: 10, fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)' }}>
+            Works best with your home page or about page. All fields are editable after import.
+          </div>
+        </div>
+      )}
+
       {isFirstModule ? (
-        <BusinessContextInputs data={localCtx} onChange={handleBusinessContextChange} />
+        <BusinessContextInputs
+            data={localCtx}
+            onChange={handleBusinessContextChange}
+          />
       ) : (
         module.additionalFields && module.additionalFields.length > 0 && (
           <div className="form-section">
