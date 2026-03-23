@@ -138,11 +138,6 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
   }
 
   async function handleGenerate() {
-    if (!state.apiKey) {
-      setError('Please add your Anthropic API key first. Click "Connect API Key" in the sidebar.');
-      return;
-    }
-
     setError('');
     setIsGenerating(true);
     setStreamingText('');
@@ -167,7 +162,6 @@ export default function ModuleShell({ moduleIndex, onNavigate }) {
 
     abortRef.current = streamCompletion(
       prompt,
-      state.apiKey,
       (chunk, full) => {
         setStreamingText(full);
       },

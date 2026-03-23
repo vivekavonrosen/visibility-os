@@ -15,8 +15,6 @@ function reducer(state, action) {
       return { ...state, view: action.payload };
     case 'SET_CURRENT_MODULE':
       return { ...state, currentModule: action.payload };
-    case 'SET_API_KEY':
-      return { ...state, apiKey: action.payload };
     case 'SET_BUSINESS_CONTEXT':
       return { ...state, businessContext: { ...state.businessContext, ...action.payload } };
     case 'SET_MODULE_OUTPUT':
@@ -37,7 +35,6 @@ function getInitialState() {
   return {
     view: 'landing',
     currentModule: persisted.currentModule || 0,
-    apiKey: persisted.apiKey || '',
     businessContext: persisted.businessContext || {},
     moduleData: persisted.moduleData || {},
   };
@@ -46,7 +43,6 @@ function getInitialState() {
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
 
-  // Persist to localStorage whenever state changes
   useEffect(() => {
     const { view, ...persistable } = state;
     saveState(persistable);
@@ -54,7 +50,6 @@ export function AppProvider({ children }) {
 
   const setView = useCallback((view) => dispatch({ type: 'SET_VIEW', payload: view }), []);
   const setCurrentModule = useCallback((idx) => dispatch({ type: 'SET_CURRENT_MODULE', payload: idx }), []);
-  const setApiKey = useCallback((key) => dispatch({ type: 'SET_API_KEY', payload: key }), []);
   const setBusinessContext = useCallback((ctx) => dispatch({ type: 'SET_BUSINESS_CONTEXT', payload: ctx }), []);
   const saveModuleOutput = useCallback((moduleId, output) => dispatch({ type: 'SET_MODULE_OUTPUT', moduleId, output }), []);
   const saveModuleInputs = useCallback((moduleId, inputs) => dispatch({ type: 'SET_MODULE_INPUTS', moduleId, inputs }), []);
@@ -66,7 +61,6 @@ export function AppProvider({ children }) {
       state,
       setView,
       setCurrentModule,
-      setApiKey,
       setBusinessContext,
       saveModuleOutput,
       saveModuleInputs,

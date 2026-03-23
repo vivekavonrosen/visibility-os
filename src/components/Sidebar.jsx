@@ -2,7 +2,7 @@ import { useApp } from '../context/AppContext.jsx';
 import { MODULES } from '../data/modules.js';
 import { getEffectiveOutput } from '../utils/storage.js';
 
-export default function Sidebar({ onApiKeyClick }) {
+export default function Sidebar() {
   const { state, setCurrentModule } = useApp();
 
   const completed = MODULES.filter(m => getEffectiveOutput(state, m.id)).length;
@@ -56,16 +56,6 @@ export default function Sidebar({ onApiKeyClick }) {
           );
         })}
       </nav>
-
-      <div className="sidebar-footer">
-        <button
-          className={`sidebar-api-key-btn ${state.apiKey ? 'has-key' : ''}`}
-          onClick={onApiKeyClick}
-        >
-          {state.apiKey ? '🔑' : '🔒'}
-          {state.apiKey ? 'API Key Connected' : 'Connect API Key'}
-        </button>
-      </div>
     </aside>
   );
 }

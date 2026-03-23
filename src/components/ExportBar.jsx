@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { downloadMarkdown, getCompletionStats } from '../utils/export.js';
 
-export default function ExportBar({ onApiKeyClick }) {
+export default function ExportBar() {
   const { state, setView } = useApp();
   const stats = getCompletionStats(state);
   const [exporting, setExporting] = useState(false);
@@ -29,26 +29,6 @@ export default function ExportBar({ onApiKeyClick }) {
       </div>
 
       <div className="export-bar-right">
-        {!state.apiKey && (
-          <button
-            style={{
-              padding: '6px 14px',
-              background: 'rgba(223,178,74,0.12)',
-              border: '1px solid rgba(223,178,74,0.3)',
-              borderRadius: 'var(--radius-sm)',
-              color: 'var(--gold)',
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              cursor: 'pointer',
-            }}
-            onClick={onApiKeyClick}
-          >
-            🔒 Add API Key
-          </button>
-        )}
-
         <button className="btn-export" onClick={handleExport} disabled={stats.completed === 0}>
           {exporting ? '⏳ Exporting...' : '⬇ Export Strategy Doc'}
         </button>
