@@ -1109,6 +1109,7 @@ p { margin-bottom: 0; }
   align-items: center;
   padding: 120px 60px 80px;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .hero-bg-gradient {
@@ -1134,7 +1135,6 @@ p { margin-bottom: 0; }
 
 .hero-content {
   position: relative;
-  max-width: 680px;
 }
 
 .hero-eyebrow {
