@@ -9,7 +9,7 @@ function AppRouter() {
   const { state } = useApp();
   const { isAuthenticated, isLoading } = useAuth();
 
-  // Still checking session — show nothing to avoid flash
+  // Still checking session — show spinner to avoid flash
   if (isLoading) {
     return (
       <div style={{
@@ -33,13 +33,10 @@ function AppRouter() {
   // Landing page — always public
   if (state.view === 'landing') return <Landing />;
 
-  // App — requires auth
-  if (state.view === 'app') {
-    if (!isAuthenticated) return <AuthPage />;
-    return <Workspace />;
-  }
-
-  return <Landing />;
+  // Everything else is the app — requires auth
+  // Workspace internally handles module pages AND completion page
+  if (!isAuthenticated) return <AuthPage />;
+  return <Workspace />;
 }
 
 export default function App() {
