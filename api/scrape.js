@@ -130,7 +130,7 @@ Return ONLY a valid JSON object with these exact keys. No explanation, no markdo
       }),
     });
 
-   if (!claudeRes.ok) {
+  if (!claudeRes.ok) {
   const errData = await claudeRes.json().catch(() => ({}));
   const errMsg = errData?.error?.message || `Anthropic API error ${claudeRes.status}`;
   return new Response(JSON.stringify({ error: errMsg }), {
